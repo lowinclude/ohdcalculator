@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор урона</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: "Source Code Pro", serif;
+            font-optical-sizing: auto;
+            font-weight: 400;
+            font-style: normal;
+            }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            margin: 0;
+            height: 100vh;
+            background: #030303;
+            color: #333;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #4CAF50;
+        }
+        .calculator-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            min-height: 100vh;
+        }
+        .calculator {
+            background: #0f1112;
+            padding: 30px;
+            border-radius: 18px;
+            width: 300px;
+        }
+        .calculator h3 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .inputs-container {
+            margin-bottom: 15px;
+        }
+        input {
+            width: 100%;
+            height: 40px;
+            margin-bottom: 10px;
+            padding: 5px 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            background-color: #222124;
+            outline: 0;
+            border: 0;
+            border-radius: 20px;
+            color: white;
+        }
+        button {
+            width: 100%;
+            padding: 5px 10px;
+            height: 40px;
+            margin-top: 10px;
+            background: #fe7551;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        button:hover {
+            background: #fe663f;
+        }
+        .result {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 20px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator-container">
+        <div class="calculator" id="calculator1">
+            <input id="baseDamage1" placeholder="Введите базовый урон" autocomplete="off"/>
+            <div id="inputsContainer1" class="inputs-container">
+            </div>
+            <button id="addInput1">Добавить модификатор</button>
+            <button id="calculateDamage1">Рассчитать урон</button>
+            <div class="result">РЕЗУЛЬТАТ: <span id="result1">-</span></div>
+        </div>
+        <div class="calculator" id="calculator2">
+            <input id="baseDamage2" placeholder="Введите базовый урон" autocomplete="off"/>
+            <div id="inputsContainer2" class="inputs-container">
+            </div>
+            <button id="addInput2">Добавить модификатор</button>
+            <button id="calculateDamage2">Рассчитать урон</button>
+            <div class="result">РЕЗУЛЬТАТ: <span id="result2">-</span></div>
+        </div>
+    </div>
+
+    <script>
+        function setupCalculator(calculatorId, baseInputId, inputsContainerId, addInputButtonId, calculateButtonId, resultId) {
+            const baseDamageInput = document.getElementById(baseInputId);
+            const inputsContainer = document.getElementById(inputsContainerId);
+            const resultDisplay = document.getElementById(resultId);
+
+            document.getElementById(addInputButtonId).addEventListener('click', () => {
+                const newInput = document.createElement('input');
+                newInput.placeholder = 'Введите модификатор (%)';
+                newInput.autocomplete = 'off';
+                newInput.classList.add('modifier');
+                inputsContainer.appendChild(newInput);
+            });
+
+            document.getElementById(calculateButtonId).addEventListener('click', () => {
+                const baseDamage = parseFloat(baseDamageInput.value) || 0;
+                const modifiers = Array.from(inputsContainer.getElementsByClassName('modifier'))
+                    .map(input => parseFloat(input.value) || 0);
+
+                let totalDamage = baseDamage;
+                modifiers.forEach(mod => {
+                    totalDamage *= (1 + mod / 100);
+                });
+
+                resultDisplay.textContent = totalDamage.toFixed(2);
+            });
+        }
+
+        setupCalculator('calculator1', 'baseDamage1', 'inputsContainer1', 'addInput1', 'calculateDamage1', 'result1');
+        setupCalculator('calculator2', 'baseDamage2', 'inputsContainer2', 'addInput2', 'calculateDamage2', 'result2');
+    </script>
+</body>
+</html>
